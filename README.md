@@ -1,167 +1,169 @@
+<img width="1625" height="672" alt="image" src="https://github.com/user-attachments/assets/a9a61f7d-b3b4-496d-976f-7111b1a208e9" />
 
-<img width="1625" height="672" alt="image" src="https://github.com/user-attachments/assets/9f0275d2-176a-4139-9b0e-3e5089ace183" />
 
-Inventario Forestal y Análisis de Carbono | Urban FIADB 2024
+# Forest Inventory and Carbon Analysis | Urban FIADB 2024
 
-**Forest Inventory / Carbon Accounting / SQL / SQLite / Data Analysis**
+**Forest Inventory · Forest Carbon Accounting · SQL · SQLite · Environmental Data Analysis**
 
-##Descripción del proyecto
+## Project Overview
 
-Este proyecto consiste en el procesamiento y análisis de datos de inventario forestal mediante SQL y hojas de cálculo, utilizando la base de datos **Urban Forest Inventory and Analysis Database (Urban FIADB)** del USDA Forest Service.
+This project focuses on processing and analyzing forest inventory data using SQL and spreadsheet tools, based on the **Urban Forest Inventory and Analysis Database (Urban FIADB)** developed by the USDA Forest Service.
 
-El objetivo fue cuantificar biomasa aérea, carbono y dióxido de carbono equivalente (CO₂e) para el año de medición 2024, realizando análisis por parcela y especie.
+The objective was to quantify aboveground biomass, carbon, and carbon dioxide equivalent (CO₂e) for the 2024 measurement year, conducting analyses at both plot and species levels.
 
-El trabajo se desarrolló como el **Ejercicio 1 de un caso práctico de SQL forestal y carbono**, adaptando las consultas a la estructura y los campos disponibles en la base Urban FIADB.
+This project was developed as **Exercise 1 of a practical SQL and forest carbon analysis case study**, adapting the queries to the database structure and fields available in Urban FIADB.
 
-## Objetivos
+## Objectives
 
-- Consultar y relacionar tablas de un inventario forestal relacional.
-- Extraer registros de árboles asociados a parcelas clasificadas como bosque muestreado.
-- Transformar variables dasométricas y de biomasa al Sistema Internacional.
-- Calcular biomasa aérea, carbono y CO₂ equivalente.
-- Analizar resultados por parcela y especie.
-- Aplicar controles de integridad, consistencia y datos faltantes.
-- Documentar consultas SQL, fórmulas y limitaciones metodológicas.
+- Query and join relational forest inventory database tables.
+- Extract tree records associated with plots classified as sampled forest.
+- Convert dendrometric and biomass variables into the International System of Units (SI).
+- Calculate aboveground biomass, carbon, and carbon dioxide equivalent.
+- Analyze results by plot and tree species.
+- Apply data integrity, consistency, and missing-value checks.
+- Document SQL queries, calculation formulas, and methodological limitations.
 
-## Fuente de datos
+## Data Source
 
 **USDA Forest Service – Urban Forest Inventory and Analysis Database (Urban FIADB).**
 
-Tablas utilizadas:
+Tables used:
 
-- `ID_PLOT`: información y estado de las parcelas y visitas.
-- `ID_TREE`: mediciones y atributos individuales de los árboles.
-- `REF_SPECIES`: catálogo taxonómico y parámetros de referencia de especies.
+- `ID_PLOT`: Plot information, status, and measurement visits.
+- `ID_TREE`: Individual tree measurements and attributes.
+- `REF_SPECIES`: Taxonomic reference catalog and species-related reference parameters.
 
-Fuentes oficiales:
+Official sources:
 
 - [Urban DataMart – USDA Forest Service](https://research.fs.usda.gov/products/dataandtools/urban-datamart)
 - [Urban FIADB Database Description – Version 9.0 (2024)](https://research.fs.usda.gov/sites/default/files/2024-10/wo-v9-0_sept2024_ug_urbanfiadb_database_description.pdf)
 
-La base SQLite original no se incluye en el repositorio. El libro de trabajo contiene la extracción filtrada de 5.131 registros utilizada en el análisis.
+The original SQLite database is not included in this repository. The workbook contains the filtered extraction of 5,131 records used in the analysis.
 
-## Alcance y criterios de selección
+## Scope and Selection Criteria
 
-El análisis se delimitó al año de medición 2024, mediante los siguientes filtros:
+The analysis was restricted to the 2024 measurement year using the following filters:
 
 - `MEAS_YEAR = 2024`
 - `PLOT_STATUS_CD = 1` (*Sampled: Forest*).
 
-La relación entre `ID_PLOT` e `ID_TREE` se realizó mediante las claves `PLOTID`, `VISIT_NBR`, `STATECD`, `UNITCD`, `COUNTYCD` y `RETIRED_PLOT`.
+The relationship between `ID_PLOT` and `ID_TREE` was established using the following composite keys:
 
-La relación con `REF_SPECIES` se realizó mediante `SPCD`.
+`PLOTID`, `VISIT_NBR`, `STATECD`, `UNITCD`, `COUNTYCD`, and `RETIRED_PLOT`.
 
-## Resultados principales
+The relationship with `REF_SPECIES` was established through the `SPCD` field.
 
-| Indicador | Resultado |
+## Key Results
+
+| Indicator | Result |
 |---|---:|
-| PLOTID seleccionados | 181 |
-| Parcelas con registros de árboles | 179 |
-| Registros de árboles analizados | 5.131 |
-| Especies presentes en la muestra | 137 |
-| Registros con biomasa y carbono disponibles | 4.537 |
-| Registros con valores faltantes | 594 |
-| Combinaciones parcela–especie | 987 |
+| Selected PLOTIDs | 181 |
+| Plots with tree records | 179 |
+| Tree records analyzed | 5,131 |
+| Species represented in the sample | 137 |
+| Records with available biomass and carbon values | 4,537 |
+| Records with missing values | 594 |
+| Plot–species combinations | 987 |
 
-### Resultados de biomasa y carbono
+### Biomass and Carbon Results
 
-El método principal sigue el factor fijo de 0,47 indicado en el ejercicio:
+The primary calculation method follows the fixed carbon conversion factor of 0.47 specified in the exercise:
 
-| Indicador | Resultado |
+| Indicator | Result |
 |---|---:|
-| Biomasa aérea de muestra | 1.880,041 t |
-| Carbono calculado (factor 0,47) | 883,619 t C |
-| CO₂ equivalente | 3.239,938 t CO₂e |
+| Sample aboveground biomass | 1,880.041 t |
+| Calculated carbon (0.47 factor) | 883.619 t C |
+| Carbon dioxide equivalent | 3,239.938 t CO₂e |
 
-También se realizó una comparación independiente utilizando el campo `CARBON_AG` nativo de FIADB:
+An independent comparison was also performed using the native `CARBON_AG` field available in FIADB:
 
-| Indicador | Resultado |
+| Indicator | Result |
 |---|---:|
-| Carbono aéreo FIADB | 893,642 t C |
-| CO₂ equivalente FIADB | 3.276,688 t CO₂e |
+| FIADB aboveground carbon | 893.642 t C |
+| FIADB carbon dioxide equivalent | 3,276.688 t CO₂e |
 
-Los dos métodos se presentan por separado, sin aplicar el factor 0,47 nuevamente al campo `CARBON_AG`.
+Both methods are reported separately. The 0.47 conversion factor was not applied again to the native `CARBON_AG` field.
 
-### Análisis de densidad
+### Carbon and Biomass Density Analysis
 
-Se calcularon indicadores de biomasa, carbono y CO₂ equivalente por hectárea para cada combinación `PLOTID + SPCD`, utilizando `TPA_UNADJ` y conversiones de acres a hectáreas.
+Aboveground biomass, carbon, and CO₂e density indicators were calculated for each `PLOTID + SPCD` combination using `TPA_UNADJ` and acre-to-hectare conversion factors.
 
-Los resultados se identifican como **densidades sin ajuste de estrato**. No deben interpretarse como estimaciones poblacionales definitivas del carbono forestal.
+The resulting indicators are reported as **unstratified density estimates**. They should not be interpreted as definitive population-level estimates of forest carbon stocks.
 
-## Metodología y transformaciones
+## Methodology and Unit Conversions
 
-Las principales conversiones aplicadas fueron:
+The main unit conversions applied were:
 
-| Variable | Transformación |
+| Variable | Conversion |
 |---|---|
-| Diámetro | Pulgadas a centímetros (× 2,54) |
-| Longitud total | Pies a metros (× 0,3048) |
-| Biomasa aérea | Libras a kilogramos (× 0,45359237) |
-| Carbono aéreo | Libras de C a kilogramos de C (× 0,45359237) |
-| Densidad de árboles | Árboles/acre a árboles/hectárea (× 2,47105) |
-| Carbono a CO₂ equivalente | t C × 44/12 |
+| Diameter | Inches to centimeters (× 2.54) |
+| Total tree length | Feet to meters (× 0.3048) |
+| Aboveground biomass | Pounds to kilograms (× 0.45359237) |
+| Aboveground carbon | Pounds of C to kilograms of C (× 0.45359237) |
+| Tree density | Trees per acre to trees per hectare (× 2.47105) |
+| Carbon to CO₂ equivalent | t C × 44/12 |
 
-Los valores faltantes se conservaron como NULL y no fueron imputados ni reemplazados por cero.
+Missing values were retained as `NULL` and were neither imputed nor replaced with zeros.
 
-## Estructura del entregable
+## Deliverable Structure
 
-El archivo Excel contiene nueve pestañas:
+The Excel workbook contains nine worksheets:
 
-1. `1_RAW_SQL`: extracción original de registros de árboles.
-2. `2_TRANSFORMACIONES`: conversión de variables al Sistema Internacional.
-3. `3_REF_ESPECIES`: catálogo de referencia taxonómica.
-4. `4_ANALISIS_PARCELA`: resultados agrupados por parcela y especie.
-5. `5_RESUMEN_PARCELA`: agregación de indicadores por parcela.
-6. `6_RESUMEN_ESPECIE`: agregación de resultados por especie.
-7. `7_DASHBOARD_RESULTADOS`: indicadores y visualizaciones principales.
-8. `8_METODOLOGIA`: procedimiento, criterios, validaciones y limitaciones.
-9. `9_CONSULTAS_SQL`: registro de consultas y procedimientos Q01–Q06.
+1. `1_RAW_SQL`: Original extraction of individual tree records.
+2. `2_TRANSFORMACIONES`: Variable conversions into SI units.
+3. `3_REF_ESPECIES`: Taxonomic reference catalog.
+4. `4_ANALISIS_PARCELA`: Results aggregated by plot and species.
+5. `4_RESUMEN_PARCELA`: Plot-level indicator aggregation.
+6. `5_RESUMEN_ESPECIE`: Species-level results aggregation.
+7. `6_DASHBOARD_RESULTADOS`: Key indicators and data visualizations.
+8. `7_METODOLOGIA`: Procedures, selection criteria, validation checks, and limitations.
+9. `8_CONSULTAS_SQL`: Documentation of SQL queries and procedures Q01–Q06.
 
-## Herramientas utilizadas
+## Tools and Technologies
 
-- **SQLite:** consulta y gestión de datos relacionales.
-- **DBeaver:** ejecución y validación de consultas SQL.
-- **Google Sheets / Microsoft Excel:** transformaciones, agregaciones, controles y dashboard.
-- **SQL:** `SELECT`, `INNER JOIN`, `WHERE`, `GROUP BY`, `COUNT`, `SUM`, `DISTINCT`, `CASE`, `CTE` y funciones de conversión.
+- **SQLite:** Relational database querying and data management.
+- **DBeaver:** SQL query execution and validation.
+- **Google Sheets / Microsoft Excel:** Data transformations, aggregations, quality checks, and dashboard development.
+- **SQL:** `SELECT`, `INNER JOIN`, `WHERE`, `GROUP BY`, `COUNT`, `SUM`, `DISTINCT`, `CASE`, `CTE`, and data conversion functions.
 
-## Control de calidad y reproducibilidad
+## Data Quality Assurance and Reproducibility
 
-Se realizaron controles sobre:
+The following validation checks were performed:
 
-- Correspondencia entre registros originales y transformados.
-- Integridad de las claves compuestas de árbol.
-- Conteo de parcelas y especies.
-- Identificación de valores faltantes.
-- Consistencia de sumas de biomasa, carbono y CO₂e.
-- Correspondencia entre consultas SQL y tablas de resultados.
+- Consistency between original and transformed records.
+- Integrity of composite tree identification keys.
+- Plot and species record counts.
+- Identification and assessment of missing values.
+- Consistency checks for biomass, carbon, and CO₂e totals.
+- Cross-validation between SQL queries and the resulting analytical tables.
 
-Las consultas principales y sus criterios se encuentran documentados en `8_CONSULTAS_SQL`.
+The main queries and selection criteria are documented in worksheet `8_CONSULTAS_SQL`.
 
-Para reproducir la extracción original es necesario disponer de una versión compatible de Urban FIADB y ejecutar las consultas sobre las tablas correspondientes. Las actualizaciones posteriores de la base podrían producir diferencias en los resultados.
+To reproduce the original data extraction, access to a compatible version of Urban FIADB is required, along with execution of the documented queries against the corresponding database tables. Subsequent database updates may result in differences in the output.
 
-## Alcance y limitaciones
+## Scope and Methodological Limitations
 
-Este proyecto representa un análisis descriptivo de los registros disponibles para el año 2024.
+This project represents a descriptive analysis of the records available for the 2024 measurement year.
 
-Las sumas de biomasa, carbono y CO₂ equivalente corresponden a los valores individuales disponibles en los registros seleccionados. No representan por sí solas el stock total de carbono de todos los bosques de la población.
+The aggregated aboveground biomass, carbon, and carbon dioxide equivalent values correspond to the individual records available within the selected dataset. They do not, by themselves, represent the total carbon stock of the entire forest population.
 
-Los indicadores por hectárea utilizan `TPA_UNADJ`, sin ajustes adicionales de estrato/subparcela. Por tanto, se presentan como densidades sin ajuste de estrato y no como estimaciones poblacionales definitivas.
+Per-hectare indicators were calculated using `TPA_UNADJ`, without additional stratum or subplot adjustments. Therefore, they are reported as unstratified density estimates rather than definitive population-level estimates.
 
-El análisis considera biomasa y carbono de madera y corteza de la parte aérea; no incluye raíces, suelo, hojarasca ni otros reservorios.
+The analysis covers aboveground wood and bark biomass and carbon. It does not include belowground biomass, soil organic carbon, litter, or other carbon pools.
 
-## Competencias demostradas
+This project covers **Exercise 1** of the reference case study. Exercise 2, which involves auditing timber harvesting volumes, is not included because the required harvesting data are not available in the tables used for this analysis.
 
-- Análisis de bases de datos forestales relacionales.
-- Consulta y transformación de datos mediante SQL.
-- Interpretación de variables dasométricas y de biomasa.
-- Cuantificación de carbono forestal y CO₂ equivalente.
-- Integración de información taxonómica.
-- Control de calidad y tratamiento de valores faltantes.
-- Documentación de procedimientos y limitaciones metodológicas.
-- Visualización y comunicación de resultados ambientales.
+## Skills Demonstrated
 
-**Proyecto de portfolio profesional · Ingeniería Forestal y Análisis de Datos Ambientales**
+- Relational forest inventory database analysis.
+- SQL-based data extraction, querying, and transformation.
+- Interpretation of dendrometric and biomass variables.
+- Forest carbon and CO₂e quantification.
+- Taxonomic data integration.
+- Data quality assurance and missing-value management.
+- Technical documentation and methodological limitations assessment.
+- Environmental data visualization and results communication.
 
+---
 
-# forest-carbon-analysis
-Forest carbon data analysis using SQL and spreadsheet-based reporting.
+**Professional Portfolio Project | Forest Engineering & Environmental Data Analytics**
