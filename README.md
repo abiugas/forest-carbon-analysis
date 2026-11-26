@@ -1,3 +1,6 @@
+
+<img width="1625" height="672" alt="image" src="https://github.com/user-attachments/assets/9f0275d2-176a-4139-9b0e-3e5089ace183" />
+
 Inventario Forestal y Análisis de Carbono | Urban FIADB 2024
 
 **Forest Inventory / Carbon Accounting / SQL / SQLite / Data Analysis**
